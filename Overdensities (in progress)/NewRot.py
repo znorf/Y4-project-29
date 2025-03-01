@@ -11,12 +11,12 @@ pairs = np.array([7000,22204,4210,14353,10284,10248])
 XYZ = data.iloc[:,1:4]
 
 
-def environment(halo1,halo2):
+def environment(halo1,halo2):           #function to find the indexes of DM haloes around each of the two clusters
     global ind1
     global ind2
     tree = KDTree(XYZ, leaf_size=2)     
-    ind = tree.query_radius(D1, r=30) 
-    for indices in ind:
+    ind = tree.query_radius(D1, r=30)       
+    for indices in ind:                 #ind (index) is in a wierd format, this for loop turns a long list of numbers into a list where each new number is a new column.
         for i in indices:
             ind1.append(i)
     ind = tree.query_radius(D2, r=30)
@@ -43,15 +43,8 @@ def rotation(rotate):           #A function to create arrays for the scatter plo
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 #Funciton calling section
 i=0
-while i <len(pairs):
-    ind1 = []
-    ind2 = []
-    xc1 = []
-    yc1 = []
-    xc2 = []
-    yc2 = []
-    D1 = []
-    D2 = []
+while i <len(pairs):        #Go through the code for every pair in the non-physical pair catalogue 'pairs'.
+    ind1,ind2,xc1,yc1,xc2,yc2,D1,D2 = [],[],[],[],[],[],[],[]               
     R1,R2,Xsep = 0,0,0   
     
     halo1,halo2 = pairs[i], pairs[i+1]
@@ -67,10 +60,10 @@ while i <len(pairs):
     rotation(0)
     plt.figure()
     plt.scatter(xc2,yc2)    #cluster 2 data
-    plt.scatter(xc1,yc1)    #cluster 1 data
-    plt.ylim(-20,130)
-    plt.xlim(-20,130)
-    i+=2
+    plt.scatter(xc1,yc1)    #cluster 1 data (on the same plot)
+    #plt.ylim(-20,130)
+    #plt.xlim(-20,130)
+    i+=2                    #plus 2 because we use two clusters (a pair) in every loop of the while loop.
     
         
     
