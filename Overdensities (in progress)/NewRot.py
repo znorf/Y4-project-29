@@ -7,7 +7,7 @@ from sklearn.neighbors import KDTree
 
 data = pd.read_csv('stack100^3rvir.csv') #Mvir,x,y,z, rvir
 n=len(data.iloc[:,0])-1 #number of data values 
-pairs = np.array([7000,22204,4210,14353,10284,10248])
+pairs = np.array([7000,22204,4210,14353,10284,10248])       #random set of points until we have a non-physical pair catalogue.
 XYZ = data.iloc[:,1:4]
 
 
@@ -44,11 +44,10 @@ def rotation(rotate):           #A function to create arrays for the scatter plo
 #Funciton calling section
 i=0
 while i <len(pairs):        #Go through the code for every pair in the non-physical pair catalogue 'pairs'.
-    ind1,ind2,xc1,yc1,xc2,yc2,D1,D2 = [],[],[],[],[],[],[],[]               
+    ind1,ind2,xc1,yc1,xc2,yc2,D1,D2 = [],[],[],[],[],[],[],[]           #reset all the arrays       
     R1,R2,Xsep = 0,0,0   
     
     halo1,halo2 = pairs[i], pairs[i+1]
-    print(halo1,halo2)
     D1 = data.iloc[halo1,1:4].values.reshape(1, -1)
     D2 = data.iloc[halo2,1:4].values.reshape(1, -1)
     R1 = data.iloc[halo1,4]/1000
@@ -56,11 +55,14 @@ while i <len(pairs):        #Go through the code for every pair in the non-physi
     Xsep = D1[0,0]-D2[0,0]
     
     environment(halo1,halo2)  
-    #rotation(random.randint(0, 628)/100) #rotation function - random number between 0 and 2pi (approximately 6.28).
-    rotation(0)
+    rotation(random.randint(0, 628)/100) #rotation function - random number between 0 and 2pi (approximately 6.28).
+    #rotation(0)
+   
     plt.figure()
     plt.scatter(xc2,yc2)    #cluster 2 data
     plt.scatter(xc1,yc1)    #cluster 1 data (on the same plot)
+   
+    plt.axis('scaled')
     #plt.ylim(-20,130)
     #plt.xlim(-20,130)
     i+=2                    #plus 2 because we use two clusters (a pair) in every loop of the while loop.
