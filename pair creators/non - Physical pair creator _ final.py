@@ -13,7 +13,7 @@ import random
 
 import time #optional, just to see how long things run for
 
-file = open('Rockstar_B.csv') #opens file containing the rockstar catalogue (above our minimum)
+file = open('Rockstar_B.csv') #opens file containing the rockstar catalogue (above our minimum mass)
 data = np.genfromtxt('Rockstar_B.csv', delimiter=',', dtype=str) #extracts data from file
 file.close() #close file to minimise memory use
 
@@ -33,7 +33,7 @@ def npfind(position,distance,x,pc):#function finds non-physical pair id, separat
     cond=True
     while cond==True and len(position)!=0:
         y=random.randrange(0,len(position)) #random integer so pair creation is random
-        target=position[y] #position of target is list of possible halo companion
+        target=position[y] #position of target is list of possible halo companions
         
         #if statment creates non-physical pair_id
         if target>int(pc):
@@ -55,10 +55,6 @@ def npfind(position,distance,x,pc):#function finds non-physical pair id, separat
         return 'no_pair' #if no pair found
     else:
         return nid, distance[y], position[y], first, sec
-    
-
-r=1000**2*3 #max radius of pairs
-r=np.sqrt(r)
 
 #grab coordinates and put them in a python list
 y=data[1:,1:4]
@@ -71,7 +67,7 @@ for i in range(0,len(y)):
 
 mass=data[1:,0] #array of mass values
 
-npairs=[[] for _ in range(len(mass))] #empty list of lists to store non-physicla pair ids
+npairs=[[] for _ in range(len(mass))] #empty list of lists to store non-physical pair ids
 
 #creates array of mass values
 starts=[]
@@ -113,7 +109,7 @@ data=read_csv('Rockstar_B.csv')
 rockID=data['rockstarid'].tolist()
 
 
-#grabs masses of haloes in pairs
+#grabs masses of haloes in physical pairs
 data=read_csv('Physical_Pairs_m0.csv')
 m0=data['m_vir_0'].tolist()
 data=read_csv('Physical_Pairs_m1.csv')
