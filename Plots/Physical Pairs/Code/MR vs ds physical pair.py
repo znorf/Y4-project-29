@@ -68,4 +68,4 @@ ax1.set_xlim([3, 20])
 ax1.set_ylim([0, 1])
 ax1.set_xticks(np.arange(3, 21, step=1))
 
-fig.savefig( 'p_MRvsds.jpg', dpi=300)
+fig1.savefig( 'p_MRvsds.jpg', dpi=300)
