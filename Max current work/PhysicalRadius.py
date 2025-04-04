@@ -28,9 +28,8 @@ def PValues():                                                                  
     #multiplier = 1
     
     theta_z = math.atan2((D2[0,1]-D1[0,1]),(D2[0,0]-D1[0,0]))
-    #theta_y = math.atan2((D2[0,2]-D1[0,2]),(D2[0,0]-D1[0,0])) 
-    #theta_z = theta_z *-1 
-                                                  #angle between the two physical pairs
+ 
+       
     Rz = np.array([[np.cos(theta_z),-1*np.sin(theta_z),0],[np.sin(theta_z),np.cos(theta_z),0],[0,0,1]])     #matrix to rotate about the z-axis
       
  
@@ -97,9 +96,21 @@ def Protation(theta_z,theta_y):                           #A function for physic
             y = (rot[1]*multiplier)-D1[0,1]*multiplier    
             z = (rot[2]*multiplier)-D1[0,2] *multiplier   
             r = np.sqrt(y**2+z**2)
-            R.append(r)
-            vol = (np.pi*XYZsep*(math.ceil(r*10)/10)**2)-(np.pi*XYZsep*(math.floor(r*10)/10)**2)          #might not work, gets volume of cylinder
-            mc1.append(data.iloc[i,0]/vol)
+            if r > binss[0]:
+                R.append(r)
+                for k in range(len(binss)):
+                    
+                    if r < binss[k]:
+                       
+                        
+                        vol = (np.pi*XYZsep*(binss[k]**2)-(np.pi*XYZsep*(binss[k-1]**2)))
+                        #print(binss[k])
+                        #print(vol)
+                        #print('1',vol,np.pi*XYZsep*(binss[i]**2),np.pi*XYZsep*(binss[i-1]**2),r,'2')
+                        mc1.append(data.iloc[i,0]/vol)
+                        #print('1',r,binss[k],binss[k-1],data.iloc[i,0]/vol,'2')
+                        break
+
 
 def Pplot():                                                                                    #plotting sum of physical and non-physical pairs    
     global Filament     #making filament and pcombined global for testing purposes
@@ -130,24 +141,29 @@ Ppairs = np.array(pd.read_csv('Pparirs1.csv',header=None))
 
 XYZ = data.iloc[:,1:4]
 bins = 100 
-select = 0                                                                                                #set the number of bins in the histogram                                                                           #create an array to contain the stacking of non-physical pairs
+select = 2938                                                                                              #set the number of bins in the histogram                                                                           #create an array to contain the stacking of non-physical pairs
 i=0
-#binss = np.array([0,1,2,3,4,5,6,7,8,9,10])
+
 binss = np.arange(0.05,20,0.1) 
-#Stack = np.zeros(bins)   
+  
 Stack = np.zeros(len(binss)-1)                                                                                  #A while loop to create density arrays for all non-physical paris in the non-physical pair catalogue 'pairs'.         
+rand =random.sample(range(0, int(len(Ppairs)/2)), int(select/2))
+
+                                                                              #A while loop to create density arrays for all non-physical paris in the non-physical pair catalogue 'pairs'.         
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 #Funciton calling section    
-while i <len(Ppairs)-select:   
+for i in rand:    
+    i=i*2
     cluster1,cluster2 = Ppairs[i], Ppairs[i+1]                                        #take the first non-physical pair from the pair catalogue
     xc1,yc1,mc1,D1,D2,R1,R2,zslice,vol,ClustersX,ClustersY,theta_z,theta_y,lims,Zsep,XYZsep,D1origin,D2origin, multiplier = PValues()
     Penvironment(cluster1,cluster2)                                                        #Rotation function - random number between 0 and 2pi (approximately 6.28).
     Protation(theta_z,theta_y)                                                                                        #Rotation of 0 degrees for testing purposes
     Pplot()                                                                  
-    i+=2    
-v=(np.delete(v,0))+0.05
+   
+    
+v=(np.delete(v,-1))+0.05
 plt.figure()                                                               
-plt.plot(v,Stack/((len(Ppairs)-select)/2))
+plt.plot(v,Stack/((select)))
 plt.xscale('log')
 plt.xlim(0.1,20)
 end = time.time()
