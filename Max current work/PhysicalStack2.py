@@ -91,11 +91,11 @@ def Protation(theta_z,theta_y):                           #A function for physic
     Ry = np.array([[np.cos(theta_y),0,np.sin(theta_y)],[0,1,0],[-1*np.sin(theta_y),0,np.cos(theta_y)]])
     for i in ind1:
         rot = np.array([data.iloc[i,1],data.iloc[i,2],data.iloc[i,3]])
-        print(rot,'1')
+
         rot = rot @ Rz      
-        print(rot,'2')
+
         rot = rot @ Ry 
-        print(rot,'3')
+
         if np.abs(D1[0,2]-rot[2])< zslice:              #makes sure all data points are within the zslice. Any DM halo with z value now within the zslice is removed
             mc1.append(data.iloc[i,0]/vol)
             xc1.append(rot[0]*multiplier)  
@@ -144,7 +144,7 @@ i=0
                                                                                      #A while loop to create density arrays for all non-physical paris in the non-physical pair catalogue 'pairs'.         
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 #Funciton calling section    
-select = 2936
+select = 2930
 while i <len(Ppairs)-select:   
     cluster1,cluster2 = Ppairs[i], Ppairs[i+1]                                        #take the first non-physical pair from the pair catalogue
     xc1,yc1,mc1,D1,D2,R1,R2,zslice,vol,ClustersX,ClustersY,theta_z,theta_y,lims,Zsep,XYZsep,D1origin,D2origin, multiplier = PValues()    
