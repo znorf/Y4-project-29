@@ -1,0 +1,49 @@
+redundant files (ie ignore):
+	n_Physical_Pairs
+	n_p_Chunks
+
+
+
+Pid:
+	Physical Pair id ie '1234:5678
+Aid:
+	Physical pair id with non-contiguous haloes de-transmformed ie '1234:+x5678' becomes '1234:7891' where haloes 	+x5678 and 7891 are identical haloes but the first is non-contiguous and the other is contiguous.  If any 	haloes in physical pair are non-contiguous, then Pid=Aid
+
+n0:
+	Non-physical pair id containing the first halo in the physical pair.  First halo in id is always the lower 	mass halo.  If n0 = 'no_pair' then no unique pair has been found.
+	
+n1:
+	Same as n0 but with second halo in the physical pair.
+	
+Hp0:
+	Coordinates for the first halo in physical pair
+
+Hp1:
+	Coordinates for the second halo in physical pair
+	
+Hn0:
+	Coodinates for halo in the non-physical pair that is paired with the first halo in the physical pair
+	
+Hn1:
+	Same for Hn0 but for second halo in the physical pair
+	
+Ds0:
+	Distance between coordinates Hp0 and Hn0 (in Mpc h(−1))
+
+Ds1:
+	Distance between coordinates Hp1 and Hn1 (in Mpc h(−1))
+
+R_vir_n0:
+	virial radius of the halo in n0 that is not part of the physical pair
+
+R_vir_n1:
+	same as before but with n1
+
+n_p_chunk_0:
+	The chunks needed for non-physical pair n0
+
+n_p_chunk_1:
+	Same but for n1
+
+no:
+	indexes of physical pairs where a non-physical pair could not be created
