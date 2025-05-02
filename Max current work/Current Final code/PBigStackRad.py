@@ -41,9 +41,9 @@ def load(select):
     binss = np.arange(0.05,20,0.1)                                                                                                  #set the number of bins in the histogram
     StackRad = np.zeros(len(binss)-1) 
     
-    rand = [random.randint(0, (len(Ppairs1))-1) for _ in range(select)]  
+    #rand = [random.randint(0, (len(Ppairs1))-1) for _ in range(select)]  
     #rand = np.arange(0,select-1,1)   
-    #rand = np.loadtxt("Nran.csv", delimiter=",",dtype=int)     
+    rand = np.loadtxt("Nran.csv", delimiter=",",dtype=int)     
     #rand = np.array([59])
     select = len(rand)
     return Ppairs1,Ppairs2,Ppairs11,Ppairs22,df_Chunk,rand,Stack,bins,select,StackRad,binss
@@ -240,7 +240,13 @@ def Pplot():                                                                    
     p, _, _ = np.histogram2d(xc1, yc1, bins=(bins, bins), range = lims, weights=mc1)           #physical pair histogram data for mass density of DM haloes around cluster 1
     Stack += p
     
-    Ph,v = np.histogram(R, bins = binss,weights=mcT)
+    
+    Ph,v = np.zeros(199),[]
+    if len(mcT) > 1:
+        Ph,v = np.histogram(R, bins = binss,weights=mcT)
+    elif len(mcT) == 1:
+        Ph,v = np.histogram(R, bins = binss,weights=mcT) 
+    
     StackRad += Ph
     
     '''
@@ -265,6 +271,8 @@ def Final():
     plt.plot(np.array([25,75]),np.array([50,50]),color = 'red',marker='*',markersize=12)        #Red stars to show the location of the physical pair clusters
     plt.axis('scaled') 
     plt.title('Physical Pair Stacked Mass density ')
+    np.savetxt("PFilament.csv", PFilament, delimiter=",")
+    
     #radius
     midss = []
     for i in range(len(binss) - 1):
@@ -277,7 +285,7 @@ def Final():
     plt.xlim(0.1,20)
     plt.title('Physical Pair Radius Mass Density')
     plt.savefig('Pradius.png')
-    
+    np.savetxt("Prad.csv", StackRad, delimiter=",")
     
     end = time.time()
     print(end-start)
@@ -289,6 +297,7 @@ def Final():
 Ppairs1,Ppairs2,Ppairs11,Ppairs22,df_Chunk,rand,Stack,bins,select,StackRad,binss = load(10)
 Nran = []
 i=0
+count = 0
 for i in rand:  
     D1origin,D2origin,R1,R2,XYZsep,data = Dataset()
 
@@ -303,8 +312,10 @@ for i in rand:
         break      
     end = time.time()
     print(end-start)
+    count +=1
+    print('                                            ',(count*100)/len(rand))        #percentage of the way through the code is
 PFilament = Final()                             #plot final histogram
-np.savetxt("PFilament.csv", PFilament, delimiter=",")
+
 #np.savetxt("Nran.csv", Nran, delimiter=",")
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 #Plots for testing

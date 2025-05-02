@@ -29,7 +29,7 @@ def load(select):
     binss = np.arange(0.05,20,0.1)
     StackRad = np.zeros(len(binss)-1) 
     rand = [random.randint(0, (len(pid))-1) for _ in range(select)] 
-    #rand = np.array([3995947])
+    #rand = np.array([4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364,4627364])
     #rand = np.loadtxt("Nran.csv", delimiter=",",dtype=int)
     #rand = [random.randint(0, 400000) for _ in range(select)] 
     #rand = np.arange(0,select-1,1)   
@@ -210,7 +210,7 @@ def Nrotation(rotate):                           #A function for physical pairs 
 
                     break
     R =np.squeeze(R)   #idk why but R sometimes is in (1,) format instead of ()                                                      
-        
+    R = R.tolist()    
     return xc1,xc2,yc1,yc2,mc1,mc2,R,mcT
         
 def Nplot():                                                                                    #plotting sum of physical and non-physical pairs      
@@ -221,9 +221,11 @@ def Nplot():                                                                    
     combined = hist1+hist2                                                                            #non-physical pairhistogram data for combined mass density of DM haloes around cluster 1 and cluster 2
     Stack += combined   
                                                                         #Stack the mass density of the non-physical pairs      
-    p,v = [],[]
-    p,v = np.histogram(R, bins = binss,weights=mcT)
-  
+    p,v = np.zeros(199),[]
+    if len(mcT) > 1:
+        p,v = np.histogram(R, bins = binss,weights=mcT)
+    elif len(mcT) == 1:
+        p,v = np.histogram(R, bins = binss,weights=mcT[0]) 
     StackRad += p
     '''
     plt.figure()
@@ -246,7 +248,7 @@ def Final():
     plt.axis('scaled')
     plt.title('Non-Physical Pair Stacked Mass Density')
     plt.savefig('NStack.png')
-    
+    np.savetxt("NFilament.csv", NFilament, delimiter=",")
     #radius code
     midss = []
     for i in range(len(binss) - 1):
@@ -260,7 +262,7 @@ def Final():
     plt.xlim(0.1,20)
     plt.title('Non-Physical Pair Radius Mass Density')
     plt.savefig('Nradius.png')
-    
+    np.savetxt("Nrad.csv", StackRad, delimiter=",")
     
     print(end-start) 
     return NFilament
@@ -301,7 +303,7 @@ for i in rand:
             print(len(chunks),XYZsep)
 NFilament = Final()                             #plot final histogram
 np.savetxt("Nran.csv", Nran, delimiter=",")
-np.savetxt("NFilament.csv", NFilament, delimiter=",")
+
 end = time.time()
 print(end-start) 
 
