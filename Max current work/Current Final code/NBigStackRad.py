@@ -40,7 +40,7 @@ def Dataset(Type):
     global chunks    
     D1,D2,R1,R2 = [],[],[],[]
     data = pd.DataFrame()
-    print(i)
+    #print(i)
     chunks = []
     if Type == 0:
         chunks = n0Chunks.iloc[i,1]      #changes!!    #cleaning data eg: from ['3_1_0','2_2_3'] to 3_1_0 and 2_2_3
@@ -206,7 +206,7 @@ def Nrotation(rotate):                           #A function for physical pairs 
                 if r < binss[k] :
                     vol = (np.pi*XYZsep*(binss[k]**2)-(np.pi*XYZsep*(binss[k-1]**2)))
                     mcT.append(data.iloc[i,0]/vol)
-                    R.append(r)
+                    R.append(float(r))
 
                     break
     R =np.squeeze(R)   #idk why but R sometimes is in (1,) format instead of ()                                                      
@@ -216,17 +216,19 @@ def Nrotation(rotate):                           #A function for physical pairs 
 def Nplot():                                                                                    #plotting sum of physical and non-physical pairs      
     global Stack  
     global StackRad
+    global combined
+    global combinedRad
     hist1, _, _ = np.histogram2d(xc1, yc1, bins=(bins, bins), range = lims,  weights=mc1)           #non-physical pairhistogram data for mass density of DM haloes around cluster 1
     hist2, _, _ = np.histogram2d(xc2, yc2, bins=(bins, bins), range = lims, weights=mc2)           #non-physical pairhistogram data for mass density of DM haloes around cluster 2    
     combined = hist1+hist2                                                                            #non-physical pairhistogram data for combined mass density of DM haloes around cluster 1 and cluster 2
     Stack += combined   
                                                                         #Stack the mass density of the non-physical pairs      
-    p,v = np.zeros(199),[]
+    combinedRad,v = np.zeros(199),[]
     if len(mcT) > 1:
-        p,v = np.histogram(R, bins = binss,weights=mcT)
+        combinedRad,v = np.histogram(R, bins = binss,weights=mcT)
     elif len(mcT) == 1:
-        p,v = np.histogram(R, bins = binss,weights=mcT[0]) 
-    StackRad += p
+        combinedRad,v = np.histogram(R, bins = binss,weights=mcT[0]) 
+    StackRad += combinedRad
     '''
     plt.figure()
     plt.plot(xc1,yc1,'r.')
@@ -249,6 +251,7 @@ def Final():
     plt.title('Non-Physical Pair Stacked Mass Density')
     plt.savefig('NStack.png')
     np.savetxt("NFilament.csv", NFilament, delimiter=",")
+    
     #radius code
     midss = []
     for i in range(len(binss) - 1):
@@ -272,32 +275,42 @@ def Final():
 #Funciton calling section    
 end = time.time()
 print(end-start) 
-n0,n1,pid,n0Chunks,n1Chunks,dataH13,rand,Stack,bins,select,StackRad,binss = load(5000)
+n0,n1,pid,n0Chunks,n1Chunks,dataH13,rand,Stack,bins,select,StackRad,binss = load(600)
 end = time.time()
 print(end-start)
 
 Nran = []
 i=0
+count = 0
 for i in rand:  
+    count +=1
+    print(end-start)
+    print('                                            ',(count*100)/len(rand))        #percentage of the way through the code is
     if n0.iloc[i,0] == 'no_pair':
         print('no pair')        
     else:
         D1,D2,R1,R2,XYZsep,data,cluster1,cluster2 = Dataset(0)
-        if len(chunks) < 10 and XYZsep < 20:                                     #ignoring wierd chunk boundary plots and (currently) ignoring pairs that go over due to periodicity
+        if len(chunks) < 8 and XYZsep < 20:                                     #ignoring wierd chunk boundary plots and (currently) ignoring pairs that go over due to periodicity
             zslice,volStack,lims,multiplier = NValues(D1,D2)        
             Nenvironment()                                                       
             xc1,xc2,yc1,yc2,mc1,mc2,R,mcT = Nrotation(random.randint(0, 628)/100)  #get the x,y and mass density data                                                                                      
             Nplot()                     #create histograms 
             if n1.iloc[i,0] == 'no_pair':
                 print('no pair')
+                Stack -= combined           #remove the data from previous pair if the second pair doesn't work.
+                StackRad -= combinedRad
             else:
                 D1,D2,R1,R2,XYZsep,data,cluster1,cluster2 = Dataset(1)
-                if len(chunks) < 10 and XYZsep < 20:
+                if len(chunks) < 8 and XYZsep < 20:
                     zslice,volStack,lims,multiplier = NValues(D1,D2)        
                     Nenvironment()                                                       
                     xc1,xc2,yc1,yc2,mc1,mc2,R,mcT = Nrotation(random.randint(0, 628)/100)  #get the x,y and mass density data                                                                                      
                     Nplot()
                     Nran.append(i)
+                    
+                    end = time.time()
+                    
+                   
         else:
             print('too big! or XYZ > 20')
             print(len(chunks),XYZsep)
