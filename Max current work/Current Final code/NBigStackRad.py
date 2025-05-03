@@ -242,7 +242,7 @@ def Nplot():                                                                    
 def Final():
     
     #stacking code
-    NFilament = np.rot90(Stack/select*2)                                                               #The data has to be rotated by 90 degrees for plt.imshow()        
+    NFilament = np.rot90(Stack/(select*4))                                                               #The data has to be rotated by 90 degrees for plt.imshow()        
     plt.figure()
     plt.imshow(NFilament,norm=LogNorm())                                                         #Plot the mass density histogram
     plt.colorbar()
@@ -260,7 +260,7 @@ def Final():
     
     plt.figure()                                                               
     plt.title('NRadiusStack')
-    plt.plot(midss,StackRad/((select*2)))
+    plt.plot(midss,StackRad/((select*4)))
     plt.xscale('log')
     plt.xlim(0.1,20)
     plt.title('Non-Physical Pair Radius Mass Density')
@@ -275,7 +275,7 @@ def Final():
 #Funciton calling section    
 end = time.time()
 print(end-start) 
-n0,n1,pid,n0Chunks,n1Chunks,dataH13,rand,Stack,bins,select,StackRad,binss = load(600)
+n0,n1,pid,n0Chunks,n1Chunks,dataH13,rand,Stack,bins,select,StackRad,binss = load(2000)
 end = time.time()
 print(end-start)
 
