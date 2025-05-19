@@ -48,9 +48,25 @@ MRlim2 = 3.7*10**13
 MRlim3 = 4
 MRlim4 = 5.2
 
+
+
+
 excessER=(Nerrors_y**2+Perrors_y**2)**0.5
 excess=Px_val/Px_count-Nx_val/Nx_count
 plt.figure()
+
+PY=Px_val/Px_count/10**14
+PYE=Perrors_y/10**14
+
+
+NY=Nx_val/Nx_count/10**14
+NYE=Nerrors_y/10**14
+
+
+EY=excess/10**14
+EYE=excessER/10**14
+
+
 
 fig, (ax1,ax2) = plt.subplots(2,1,sharex=True,gridspec_kw={'height_ratios': [1.2, 0.75]})
 fig.tight_layout(h_pad=0.01)
@@ -86,7 +102,7 @@ ax2.plot([0, 1], [1, 1], transform=ax2.transAxes, **kwargs)
 
 
 plt.xlabel('Mass Ratio (no units)')
-plt.ylabel('$M_{stack}$ ($10^{14}M_\odot$)')
+plt.ylabel('$M_{stack}$ ($10^{14}M_\odot h^{-1}$)')
 ax2.yaxis.set_label_coords(-0.075,1.2)
 
 ax1.set_xlim(0,1)

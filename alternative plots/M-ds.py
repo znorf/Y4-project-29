@@ -55,26 +55,27 @@ MRlim2 = 3.7*10**13
 MRlim3 = 4
 MRlim4 = 5.2
 
-excessER=(Nerrors_y**2+Perrors_y**2)**0.5
-excess=Px_val/Px_count-Nx_val/Nx_count
+excessER=((Nerrors_y*Nmidss_MR)**2+Perrors_y**2)**0.5
+excess=Px_val/Px_count-Nx_val/Nx_count*Nmidss_MR
 plt.figure()
 
 fig= plt.figure()
 ax=fig.gca()
 fig.tight_layout(h_pad=0.01)
 
-ax.errorbar(Nmidss_MR, Nx_val/Nx_count/10**14, xerr=Nerrors_x, yerr=Nerrors_y/10**14, fmt='.',color = 'blue', capsize=5, label='Non-physical')  #gives errors if divide by 0
+ax.errorbar(Nmidss_MR, Nx_val/Nx_count/10**14*Nmidss_MR, xerr=Nerrors_x, yerr=Nerrors_y*Nmidss_MR/10**14, fmt='.',color = 'blue', capsize=5, label='Non-physical')  #gives errors if divide by 0
 ax.errorbar(Pmidss_MR, Px_val/Px_count/10**14, xerr=Perrors_x, yerr=Perrors_y/10**14, fmt='.',color = 'red', capsize=5, label='Physical')  #gives errors if divide by 0
 
-ax.set_ylim(0,6.5)
+ax.set_ylim(-0.2,6.5)
 ax.set_xlim(3,20) 
+ax.plot([-1,21],[0,0],linestyle='dashed')
 
 ax.errorbar(Pmidss_MR, excess/10**14, xerr=Perrors_x, yerr=excessER/10**14, fmt='.',color = 'black', capsize=5, label='Excess')  #gives errors if divide by 0
 ax.legend()
 
 
 plt.xlabel('$ds$ ($Mpc$ $h^{-1}$)')
-plt.ylabel('$M_{stack}$ ($10^{14}M_\odot$)')
+plt.ylabel('$M_{stack}$ ($10^{14}M_\odot h^{-1}$)')
 
 #ax.set_xlim(0,1)
 #ax.set_xlim(0,1)
